@@ -166,3 +166,4 @@ logs/
 tmp/
 tmp/models/
 static/
+pgdata/
