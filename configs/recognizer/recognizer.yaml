@@ -1,0 +1,3 @@
+
+min_dist_threshold: 0.7
+dist_method: cosine

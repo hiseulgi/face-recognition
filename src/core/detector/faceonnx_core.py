@@ -22,15 +22,18 @@ class FaceOnnxCore(OnnxBase):
         self,
         engine_path: str,
         provider: str = "cpu",
+        prob_threshold: float = 0.7,
+        iou_threshold: float = 0.5,
+        top_k: int = -1,
     ) -> None:
         super().__init__(engine_path, provider)
+        self.prob_threshold = prob_threshold
+        self.iou_threshold = iou_threshold
+        self.top_k = top_k
 
     def detect_face(
         self,
         img: np.ndarray,
-        prob_threshold: float = 0.7,
-        iou_threshold: float = 0.5,
-        top_k: int = -1,
     ) -> Union[List[FaceONNXResultSchema], None]:
 
         # preprocess
@@ -43,9 +46,9 @@ class FaceOnnxCore(OnnxBase):
         results = self.postprocess(
             raw_img=img,
             outputs=outputs,
-            prob_threshold=prob_threshold,
-            iou_threshold=iou_threshold,
-            top_k=top_k,
+            prob_threshold=self.prob_threshold,
+            iou_threshold=self.iou_threshold,
+            top_k=self.top_k,
         )
 
         return results

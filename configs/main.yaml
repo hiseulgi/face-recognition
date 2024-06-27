@@ -1,0 +1,20 @@
+# main configs
+
+# default hydra configuration
+defaults:
+  - _self_
+  - api: [default]
+  - database: [postgres]
+  - detector: [faceonnx]
+  - recognizer: [arcface, recognizer]
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# override hydra output directory
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+
+# service mode
+service: api

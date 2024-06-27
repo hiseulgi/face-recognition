@@ -1,0 +1,4 @@
+
+arcface:
+  engine_path: static/recognizer/arcfaceresnet100-11-int8.onnx
+  provider: cpu
