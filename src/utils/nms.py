@@ -1,3 +1,5 @@
+"""NMS (Non-Maximum Suppression) utilities."""
+
 import rootutils
 
 ROOT = rootutils.autosetup()

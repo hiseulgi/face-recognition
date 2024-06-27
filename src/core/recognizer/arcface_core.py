@@ -1,4 +1,4 @@
-"""PPE Classifier engine with ONNX runtime."""
+"""Arcface recognizer core module"""
 
 import rootutils
 
@@ -10,9 +10,6 @@ import cv2
 import numpy as np
 
 from src.core.onnx_base import OnnxBase
-from src.utils.logger import get_logger
-
-log = get_logger()
 
 
 class ArcfaceOnnxCore(OnnxBase):
@@ -22,9 +19,28 @@ class ArcfaceOnnxCore(OnnxBase):
         engine_path: str,
         provider: str = "cpu",
     ) -> None:
+        """
+        Initialize Arcface recognizer core.
+
+        Args:
+            engine_path (str): Path to the engine file.
+            provider (str): Inference provider (default: "cpu").
+
+        Returns:
+            None
+        """
         super().__init__(engine_path, provider)
 
     def get_embedding(self, face: np.ndarray) -> Union[List[float], None]:
+        """
+        Get face embedding from the engine.
+
+        Args:
+            face (np.ndarray): Face image.
+
+        Returns:
+            Union[List[float], None]: Face embedding or None.
+        """
         face = self.preprocess(face)
         outputs = self.engine.run(None, {self.metadata[0].input_name: face})[
             0
@@ -32,6 +48,15 @@ class ArcfaceOnnxCore(OnnxBase):
         return outputs
 
     def preprocess(self, img: np.ndarray) -> np.ndarray:
+        """
+        Preprocess input image.
+
+        Args:
+            img (np.ndarray): Input image.
+
+        Returns:
+            np.ndarray: Preprocessed image.
+        """
 
         dst_h, dst_w = self.img_shape
         resized_img = np.zeros((1, dst_h, dst_w, 3), dtype=np.float32)
@@ -51,4 +76,4 @@ if __name__ == "__main__":
     embedding = engine.get_embedding(img)
 
     if embedding:
-        log.info(embedding)
+        print(embedding)

@@ -1,3 +1,5 @@
+"""Database models table schema."""
+
 import rootutils
 
 ROOT = rootutils.autosetup()
@@ -10,6 +12,8 @@ from src.database.database import Base
 
 
 class Profile(Base):
+    """Profile table schema."""
+
     __tablename__ = "profiles"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -20,6 +24,8 @@ class Profile(Base):
 
 
 class FaceEmbedding(Base):
+    """FaceEmbedding table schema."""
+
     __tablename__ = "face_embeddings"
 
     id = Column(Integer, primary_key=True, index=True)

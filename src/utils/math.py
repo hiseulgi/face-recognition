@@ -1,3 +1,5 @@
+"""Math utility functions."""
+
 import rootutils
 
 ROOT = rootutils.autosetup()

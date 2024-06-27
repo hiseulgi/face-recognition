@@ -1,3 +1,5 @@
+""" Database module """
+
 import rootutils
 
 ROOT = rootutils.autosetup()
@@ -16,8 +18,22 @@ Base = declarative_base()
 
 
 class Database:
+    """Database wrapper class."""
 
     def __init__(self, host: str, port: int, user: str, password: str, db: str) -> None:
+        """
+        Initialize database connection.
+
+        Args:
+            host (str): Hostname of the database.
+            port (int): Port number of the database.
+            user (str): Username of the database.
+            password (str): Password of the database.
+            db (str): Database name.
+
+        Returns:
+            None
+        """
         self.host = host
         self.port = port
         self.user = user
@@ -25,6 +41,9 @@ class Database:
         self.db = db
 
     def connect(self) -> None:
+        """
+        Connect to the database.
+        """
         try:
             self.engine = create_engine(
                 f"postgresql+psycopg2://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
@@ -47,28 +66,43 @@ class Database:
             log.error(f"Error connecting to database: {e}")
 
     def setup_pgvector(self) -> None:
+        """
+        Setup pgvector extension.
+        """
         with self.engine.connect() as conn:
             conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector;"))
             log.info("pgvector extension created")
 
     def get_db(self):
-        db = self.SessionLocal()
+        """
+        Get database session.
+        """
+        db = self.SessionLocal
         try:
             yield db
         finally:
             db.close()
 
     async def get_async_db(self):
-        async with self.SessionAsync() as db:
+        """
+        Get async database session.
+        """
+        async with self.SessionAsync as db:
             try:
                 yield db
             finally:
                 await db.close()
 
     def close(self) -> None:
+        """
+        Close database connection.
+        """
         self.engine.dispose()
         log.info("Database connection closed")
 
     async def async_close(self) -> None:
+        """
+        Close async database connection.
+        """
         await self.async_engine.dispose()
         log.info("Async database connection closed")

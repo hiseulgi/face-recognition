@@ -1,3 +1,5 @@
+"""Face detection core module"""
+
 import rootutils
 
 ROOT = rootutils.autosetup()
@@ -9,14 +11,11 @@ import numpy as np
 
 from src.core.onnx_base import OnnxBase
 from src.schema.faceonnx_schema import FaceONNXResultSchema
-from src.utils.logger import get_logger
 from src.utils.nms import hard_nms
-
-log = get_logger()
 
 
 class FaceOnnxCore(OnnxBase):
-    """Only support 1 batch size for now (according to the original model)"""
+    """Face detection using ONNX model"""
 
     def __init__(
         self,
@@ -26,6 +25,19 @@ class FaceOnnxCore(OnnxBase):
         iou_threshold: float = 0.5,
         top_k: int = -1,
     ) -> None:
+        """
+        Initialize face detection core.
+
+        Args:
+            engine_path (str): Path to the ONNX model.
+            provider (str): Inference provider (cpu or gpu).
+            prob_threshold (float): Probability threshold for detection.
+            iou_threshold (float): Intersection over union threshold for detection.
+            top_k (int): Number of top detections to keep.
+
+        Returns:
+            None
+        """
         super().__init__(engine_path, provider)
         self.prob_threshold = prob_threshold
         self.iou_threshold = iou_threshold
@@ -35,6 +47,15 @@ class FaceOnnxCore(OnnxBase):
         self,
         img: np.ndarray,
     ) -> Union[List[FaceONNXResultSchema], None]:
+        """
+        Detect face from the input image.
+
+        Args:
+            img (np.ndarray): Input image.
+
+        Returns:
+            Union[List[FaceONNXResultSchema], None]: List of face detection results or None.
+        """
 
         # preprocess
         preprocessed_img = self.preprocess(img)
@@ -54,6 +75,15 @@ class FaceOnnxCore(OnnxBase):
         return results
 
     def preprocess(self, img: np.ndarray) -> np.ndarray:
+        """
+        Preprocess input image.
+
+        Args:
+            img (np.ndarray): Input image.
+
+        Returns:
+            np.ndarray: Preprocessed image.
+        """
 
         dst_h, dst_w = self.img_shape
         resized_img = np.zeros((1, dst_h, dst_w, 3), dtype=np.float32)
@@ -75,6 +105,19 @@ class FaceOnnxCore(OnnxBase):
         iou_threshold: float = 0.5,
         top_k: int = -1,
     ) -> Union[List[FaceONNXResultSchema], None]:
+        """
+        Postprocess the outputs.
+
+        Args:
+            raw_img (np.ndarray): Raw input image.
+            outputs (np.ndarray): Model outputs.
+            prob_threshold (float): Probability threshold.
+            iou_threshold (float): Intersection over union threshold.
+            top_k (int): Number of top detections to keep.
+
+        Returns:
+            Union[List[FaceONNXResultSchema], None]: List of face detection results or None.
+        """
 
         height, width, _ = raw_img.shape
 

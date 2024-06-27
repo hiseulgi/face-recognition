@@ -7,6 +7,7 @@ defaults:
   - database: [postgres]
   - detector: [faceonnx]
   - recognizer: [arcface, recognizer]
+  - logger: [default] 
   - override hydra/hydra_logging: none
   - override hydra/job_logging: none
 
@@ -15,6 +16,10 @@ hydra:
   run:
     dir: .
   output_subdir: null
+
+# override logger level
+logger:
+  level: INFO
 
 # service mode
 service: api

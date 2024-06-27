@@ -1,3 +1,5 @@
+"""Enumerations schema."""
+
 import rootutils
 
 ROOT = rootutils.autosetup()
