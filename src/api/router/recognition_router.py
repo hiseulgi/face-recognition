@@ -8,7 +8,7 @@ import time
 from io import BytesIO
 
 import numpy as np
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends
 from omegaconf import DictConfig
 from PIL import Image
 
@@ -18,7 +18,7 @@ from src.core.detector.faceonnx_core import FaceOnnxCore
 from src.core.recognizer.arcface_core import ArcfaceOnnxCore
 from src.database.database import Database
 from src.schema.database_schema import FaceEmbeddingCreate, ProfileCreate
-from src.schema.enums_schema import DetectionModel, RecognitionModel
+from src.schema.enums_schema import DetectionModel, DistanceMetric, RecognitionModel
 from src.schema.recognition_api_schema import (
     BaseAPIResponse,
     GetAllFaceEmbeddingsResponse,
@@ -250,8 +250,9 @@ class RecognitionRouter:
         if not nearest_face_embedding:
             raise exceptions.NotFound("Face not recognized")
 
-        # calculate cosine distance
-        distance = find_cosine_distance(embedding, nearest_face_embedding.embedding)
+        # calculate distance
+        if self.cfg.recognizer.dist_method == DistanceMetric.COSINE:
+            distance = find_cosine_distance(embedding, nearest_face_embedding.embedding)
 
         # if distance is less than threshold
         if distance > self.cfg.recognizer.min_dist_threshold:
