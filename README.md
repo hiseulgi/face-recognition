@@ -114,6 +114,8 @@ Recognize a face from an image file. The image file will be processed to detect 
 Success Response:
 
 ```json
+Status: 200 OK
+
 {
   "timestamp": "1719558134.5086367",
   "status": "success",
@@ -140,6 +142,8 @@ Delete a face embedding from the database.
 Success Response:
 
 ```json
+Status: 200 OK
+
 {
   "timestamp": "1719558375.0022182",
   "status": "success",
