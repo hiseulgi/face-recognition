@@ -1,6 +1,6 @@
 
 faceonnx:
-  engine_path: static/detector/face_detector_640.onnx
+  engine_path: static/face_detector_640.onnx
   provider: cpu
   prob_threshold: 0.7
   iou_threshold: 0.5
